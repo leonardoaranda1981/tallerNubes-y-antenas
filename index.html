@@ -1,172 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Display a map on a webpage</title>
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
-  <style>
-  body { margin: 0; padding: 0; }
-  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-  </style>
+<meta charset="utf-8">
+<title>Cuando las nubes eran de helio</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<!--Libreria de estilo de mapbox, necesaria para trabajar con mapas -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet">
+<!--Libreria de javascript de mapbox, necesaria para trabajar con mapas -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css?v=6">
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
 </head>
 <body>
-  <div id="map"></div>
+  <div id="map"></div><!--Crea una caja vacia en el cuerpo de la página con el nombre map -->
+  <div id="titulo">De Nubes y<br> Antenas</div>
   <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoibG9ibmFhbHNhbmEiLCJhIjoiY2xzaHQ2ejMzMWVzaTJpcHZiZTcwamx4aiJ9.7yuRE_Xc8Ud0qS4WdCBhuA';
-    const map = new mapboxgl.Map({ //this function creates a new map
-      container: 'map', //this line defines which division will be the container for the map      
-      style: 'mapbox://styles/lobnaalsana/clsht2r9h01uf01pegixuefib',
-      center: [34.9412973, 31.2370215], //this parameter fixes the initial coordinates for the basemap
-      zoom: 12.5, //this parameter fixes the initial zoom for the map
+    mapboxgl.accessToken = 'pk.eyJ1IjoibGVvbmFyZG9tZWRpYWxhYiIsImEiOiJjamt6NTEyeGswcWZ6M3dxdG1vaHVwaXFzIn0.MtXPXiVm7YDfUKt3vm4_dQ';//llave de acceso para usar mapbox. Esta llave se genera desde la cuenta de mapbox. 
+
+    const map = new mapboxgl.Map({ //Esta función crea un nuevo mapa
+      container: 'map', //Define el contenedor del mapa. En esta caso la caja "map" creada anteriormente      
+      style: 'mapbox://styles/leonardomedialab/cm2aujful00wa01qkcjno8buw',//este es el estilo usado por el mapa
+      center: [ -99.133333, 19.432778],//coordenadas iniciales del mapa
+      pitch: 75,//inclinación inicial del mapa
+      zoom: 15, //zoom inicial del mapa
     });
-    map.addControl(new mapboxgl.NavigationControl());
-    map.on('load', function() {
-      
-      map.addSource('points', {
-        type: 'geojson',
-        data: 'points-test.json?v=7'//when updating the file, change de value of v. For example v=2
-      });
-      map.addSource('way2AaraPoints', {
-        type: 'geojson',
-        data: 'way2AaraWaypoints.geojson?v=6'//when updating the file, change de value of v. For example v=2
-      });
-      map.addSource('way2araaSource', {
-        type: 'geojson',
-        data: 'tracks.geojson?v=5'//when updating the file, change de value of v. For example v=2
-      });
-      map.addSource('AaraToBirAlmshash', {
-        type: 'geojson',
-        data: 'aara to bir almshash tracks.geojson?v=5'//when updating the file, change de value of v. For example v=2
-      });
-       map.addSource('BirAlmshashToGwies', {
-        type: 'geojson',
-        data: 'BirAlmshashToGwies tracks.geojson?v=9'//when updating the file, change de value of v. For example v=2
-      });
-       map.addSource('mainRoad03', {//this is the name you give internally to the source. Name with no spaces
-        type: 'geojson',
-        data: 'MainRoad03.geojson?v=1'//when updating the file, change de value of v. For example v=2
-      });
-       map.addSource('BirAlhamam&Cemetry', {//this is the name you give internally to the source. Name with no spaces
-        type: 'geojson',
-        data: 'BirAlhamam&Cemetry.geojson?v=1'//when updating the file, change de value of v. For example v=2
+    map.addControl(new mapboxgl.NavigationControl());//añade los controles basicos del mapa
+    map.on('load', function() {  //esta función se ejecuta al finalizar de cargar el mapa
+    map.addSource('redes', {//añade una nueva fuente de datos y asigna a esta fuente el nombre de 'redes'
+        type: 'geojson',//tipo de archivo de la fuente
+        data: 'geoJson.json?v=27'//URL relativo al archivo de la fuente
       });
 
-
-       
-      map.addLayer({//añade una capa al mapa
-          'id': 'mainRoad03-layer', //nombre de la capa
-          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'mainRoad03',//nombre de la fuente a partir de la cual se creara la capa
-          'paint': {//this defines the way the line is drawn
-            'line-color': 'rgba(0, 0, 255, 0.5)',//color of line
-            'line-width': 4//width of the line
-          }
-      });
-       
-      map.addLayer({//añade una capa al mapa
-          'id': 'araa-layer', //nombre de la capa
-          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'way2araaSource',//nombre de la fuente a partir de la cual se creara la capa
-          'paint': {//this defines the way the line is drawn
-            'line-color': 'rgba(0, 0, 255, 0.5)',//color of line
-            'line-width': 2//width of the line
-          }
-      });
-      map.addLayer({//añade una capa al mapa
-          'id': 'AaraToBirAlmshash', //nombre de la capa
-          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'AaraToBirAlmshash',//nombre de la fuente a partir de la cual se creara la capa
-          'paint': {//this defines the way the line is drawn
-            'line-color': 'rgba(0, 0, 255, 0.5)',//color of line
-            'line-width': 4//width of the line
-          }
-      });
-       map.addLayer({//añade una capa al mapa
-          'id': 'BirAlmshashToGwies', //nombre de la capa
-          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'BirAlmshashToGwies',//nombre de la fuente a partir de la cual se creara la capa
-          'paint': {//this defines the way the line is drawn
-            'line-color': 'rgb(72, 97, 156)',//color of line
-            'line-width': 4//width of the line
-          }
-      });
-       map.addLayer({
-          'id': 'points-layer',//nombre de la capa
-          'type': 'circle',//tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'points',
-          'paint': {//elementos de estilo de la capa
-            'circle-radius': 6,//radio del circulo
-            'circle-stroke-width': 1,//ancho del contorno del circulo
-            'circle-color': 'red',//color de relleno del circulo
-            'circle-stroke-color': 'white'//color de contorno del circulo
-          }
-      });
-      map.addLayer({
-          'id': 'BirAlhamam&Cemetry-layer',//nombre de la capa
-          'type': 'circle',//tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'BirAlhamam&Cemetry',
-          'paint': {//elementos de estilo de la capa
-            'circle-radius': 6,//radio del circulo
-            'circle-stroke-width': 1,//ancho del contorno del circulo
-            'circle-color': 'red',//color de relleno del circulo
-            'circle-stroke-color': 'white'//color de contorno del circulo
-          }
-      }); 
-      map.addLayer({
-          'id': 'way2Aara-points-layer',//nombre de la capa
-          'type': 'circle',//tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
-          'source': 'way2AaraPoints',
-          'paint': {//elementos de estilo de la capa
-            'circle-radius': 4,//radio del circulo
-            'circle-stroke-width': 1,//ancho del contorno del circulo
-            'circle-color': 'green',//color de relleno del circulo
-            'circle-stroke-color': 'white'//color de contorno del circulo
-          }
-      }); 
-  
-      
-      const popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false
-      });
-      map.on('mouseenter', 'points-layer', (e) => {
-        map.getCanvas().style.cursor = 'pointer';   
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const name = e.features[0].properties.name;
-        const desc = e.features[0].properties.desc;
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
-        popup.setLngLat(coordinates).setHTML(name+"<br><br>"+desc).addTo(map);
-      });
-         
-      map.on('mouseleave', 'points-layer', () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
-      });
-      map.on('mouseenter', 'way2Aara-points-layer', (e) => {
-        map.getCanvas().style.cursor = 'pointer';   
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const name = e.features[0].properties.name;
-        const desc = e.features[0].properties.desc;
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
-        popup.setLngLat(coordinates).setHTML(name+"<br><br>"+desc).addTo(map);
-      });
-         
-      map.on('mouseleave', 'way2Aara-points-layer', () => {
-        map.getCanvas().style.cursor = '';
-        popup.remove();
-      });
-
-
-
-      
+     map.addLayer({//crea una nueva capa en el mapa
+            'id': 'redes-layer',//nombre la nueva capa como 'redes-layer'
+            'type': 'circle',//asigna el tipo circulo a la capa
+            'source': 'redes',//designa a redes como la fuente de datos a partir de la cual se creará la capa
+            'paint': {//parametro de dibujo de los circulos
+                'circle-radius': [//radio del circulo, interpolado por nivel de zoom entre 4 y 40 pixeles
+                        "interpolate", ["linear"], ["zoom"],
+                          10, 4, 
+                          16, 40
+                  ],
+                'circle-stroke-width': 0,//borde del circulo 0 pixeles
+                'circle-color': {//asigna el color del circulo de acuerdo al valor de mappedRSSI de la fuente de datos
+                  property: 'mappedRSSI',
+                  stops: [ 
+                      [8, "#e7f7f7"],
+                      [26, "#d8d7f7"],
+                      [39, "#f7c6f1"],
+                      [50, "#f7b3b8"]
+                  ]
+                },
+                'circle-stroke-color': 'white',//define el color del borde del circulo
+                'circle-blur': 2 //define el difuminado del circulo
+            }
     });
-  </script>
+      map.addLayer({ //crea una nueva capa sobre el mapa
+            'id': 'labels',//nombra a la capa como 'labels'
+            'type': 'symbol',//designa el tipo de capa como 'symbol'
+            'source': 'redes',//designa la fuente de datos 'redes'
+            'layout': {//define como se representa la capa
+                'text-field': ['get', 'RSSI'],//extrae el texto de la variable RSSI de nuestra fuente de datos
+                'text-variable-anchor': ['top', 'bottom', 'left', 'right'],//alinea el texto
+                'text-radial-offset': 0.5,//le asigna una posición offset al texto
+                'text-justify': 'auto',//justifica el texto
+                'text-font': ['Open Sans Regular', 'Arial Unicode MS Bold'],//designa la tipografía del texto
+                'text-size': 8//designa el tamaño del texto
+                
+
+            }, "paint": {
+               'text-color': 'white'//designa el color del texto
+            }
+        });
+});
+      </script>
 
 </body>
 </html>
