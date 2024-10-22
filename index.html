@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Display a map on a webpage</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
+  <style>
+  body { margin: 0; padding: 0; }
+  #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibG9ibmFhbHNhbmEiLCJhIjoiY2xzaHQ2ejMzMWVzaTJpcHZiZTcwamx4aiJ9.7yuRE_Xc8Ud0qS4WdCBhuA';
+    const map = new mapboxgl.Map({ //this function creates a new map
+      container: 'map', //this line defines which division will be the container for the map      
+      style: 'mapbox://styles/lobnaalsana/clsht2r9h01uf01pegixuefib',
+      center: [34.9412973, 31.2370215], //this parameter fixes the initial coordinates for the basemap
+      zoom: 12.5, //this parameter fixes the initial zoom for the map
+    });
+    map.addControl(new mapboxgl.NavigationControl());
+    map.on('load', function() {
+      
+      map.addSource('points', {
+        type: 'geojson',
+        data: 'points-test.json?v=7'//when updating the file, change de value of v. For example v=2
+      });
+      map.addSource('way2AaraPoints', {
+        type: 'geojson',
+        data: 'way2AaraWaypoints.geojson?v=6'//when updating the file, change de value of v. For example v=2
+      });
+      map.addSource('way2araaSource', {
+        type: 'geojson',
+        data: 'tracks.geojson?v=5'//when updating the file, change de value of v. For example v=2
+      });
+      map.addSource('AaraToBirAlmshash', {
+        type: 'geojson',
+        data: 'aara to bir almshash tracks.geojson?v=5'//when updating the file, change de value of v. For example v=2
+      });
+       map.addSource('BirAlmshashToGwies', {
+        type: 'geojson',
+        data: 'BirAlmshashToGwies tracks.geojson?v=9'//when updating the file, change de value of v. For example v=2
+      });
+       map.addSource('mainRoad03', {//this is the name you give internally to the source. Name with no spaces
+        type: 'geojson',
+        data: 'MainRoad03.geojson?v=1'//when updating the file, change de value of v. For example v=2
+      });
+       map.addSource('BirAlhamam&Cemetry', {//this is the name you give internally to the source. Name with no spaces
+        type: 'geojson',
+        data: 'BirAlhamam&Cemetry.geojson?v=1'//when updating the file, change de value of v. For example v=2
+      });
+
+
+       
+      map.addLayer({//añade una capa al mapa
+          'id': 'mainRoad03-layer', //nombre de la capa
+          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'mainRoad03',//nombre de la fuente a partir de la cual se creara la capa
+          'paint': {//this defines the way the line is drawn
+            'line-color': 'rgba(0, 0, 255, 0.5)',//color of line
+            'line-width': 4//width of the line
+          }
+      });
+       
+      map.addLayer({//añade una capa al mapa
+          'id': 'araa-layer', //nombre de la capa
+          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'way2araaSource',//nombre de la fuente a partir de la cual se creara la capa
+          'paint': {//this defines the way the line is drawn
+            'line-color': 'rgba(0, 0, 255, 0.5)',//color of line
+            'line-width': 2//width of the line
+          }
+      });
+      map.addLayer({//añade una capa al mapa
+          'id': 'AaraToBirAlmshash', //nombre de la capa
+          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'AaraToBirAlmshash',//nombre de la fuente a partir de la cual se creara la capa
+          'paint': {//this defines the way the line is drawn
+            'line-color': 'rgba(0, 0, 255, 0.5)',//color of line
+            'line-width': 4//width of the line
+          }
+      });
+       map.addLayer({//añade una capa al mapa
+          'id': 'BirAlmshashToGwies', //nombre de la capa
+          'type': 'line', //tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'BirAlmshashToGwies',//nombre de la fuente a partir de la cual se creara la capa
+          'paint': {//this defines the way the line is drawn
+            'line-color': 'rgb(72, 97, 156)',//color of line
+            'line-width': 4//width of the line
+          }
+      });
+       map.addLayer({
+          'id': 'points-layer',//nombre de la capa
+          'type': 'circle',//tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'points',
+          'paint': {//elementos de estilo de la capa
+            'circle-radius': 6,//radio del circulo
+            'circle-stroke-width': 1,//ancho del contorno del circulo
+            'circle-color': 'red',//color de relleno del circulo
+            'circle-stroke-color': 'white'//color de contorno del circulo
+          }
+      });
+      map.addLayer({
+          'id': 'BirAlhamam&Cemetry-layer',//nombre de la capa
+          'type': 'circle',//tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'BirAlhamam&Cemetry',
+          'paint': {//elementos de estilo de la capa
+            'circle-radius': 6,//radio del circulo
+            'circle-stroke-width': 1,//ancho del contorno del circulo
+            'circle-color': 'red',//color de relleno del circulo
+            'circle-stroke-color': 'white'//color de contorno del circulo
+          }
+      }); 
+      map.addLayer({
+          'id': 'way2Aara-points-layer',//nombre de la capa
+          'type': 'circle',//tipo de capa, puede ser fill, line, symbol, circle, heatmap, "fill-extrusion", "raster", "hillshade", "background", "sky"
+          'source': 'way2AaraPoints',
+          'paint': {//elementos de estilo de la capa
+            'circle-radius': 4,//radio del circulo
+            'circle-stroke-width': 1,//ancho del contorno del circulo
+            'circle-color': 'green',//color de relleno del circulo
+            'circle-stroke-color': 'white'//color de contorno del circulo
+          }
+      }); 
+  
+      
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+      });
+      map.on('mouseenter', 'points-layer', (e) => {
+        map.getCanvas().style.cursor = 'pointer';   
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const name = e.features[0].properties.name;
+        const desc = e.features[0].properties.desc;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        popup.setLngLat(coordinates).setHTML(name+"<br><br>"+desc).addTo(map);
+      });
+         
+      map.on('mouseleave', 'points-layer', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+      });
+      map.on('mouseenter', 'way2Aara-points-layer', (e) => {
+        map.getCanvas().style.cursor = 'pointer';   
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const name = e.features[0].properties.name;
+        const desc = e.features[0].properties.desc;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        popup.setLngLat(coordinates).setHTML(name+"<br><br>"+desc).addTo(map);
+      });
+         
+      map.on('mouseleave', 'way2Aara-points-layer', () => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
+      });
+
+
+
+      
+    });
+  </script>
+
+</body>
+</html>
